@@ -1,3 +1,6 @@
+* Студент: [Кирилл Кузнецов](https://up.htmlacademy.ru/profession/backender/2/php-3/2/user/2034395).
+* Наставник: [Владимир Зайцев](https://up.htmlacademy.ru/profession/backender/2/php-3/2/user/2098497).
+
 # Руководство по работе с проектом
 
 Данный проект создан с помощью [Create React App](https://github.com/facebook/create-react-app).

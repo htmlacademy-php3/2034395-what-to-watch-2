@@ -10,6 +10,7 @@ import { capitalize } from '../../util';
 function GenresList() {
   const dispatch = useAppDispatch();
   const activeGenre = useAppSelector(getActiveGenre);
+  // @ts-ignore
   const genres = useAppSelector(getGenres);
   const [searchParams] = useSearchParams();
   const searchGenre = searchParams.get('genre');
