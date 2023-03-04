@@ -18,25 +18,23 @@ class MovieRepository implements MovieRepositoryInterface
         $this->client = $httpClient;
     }
 
-    public function all(): array
-    {
-        return [];
-    }
-
+    /**
+     * Returns array with requested by IMDB id movie params
+     *
+     * @param string $id IMDB id
+     * @return array Movie params
+     *
+     * @throws GuzzleException
+     */
     public function getById(string $id): array
     {
-        try {
-            $response = $this->client->request('GET', self::API_URI, [
-                'query' => [
-                    'apikey' => self::API_KEY,
-                    'i' => $id
-                ]
-            ]);
+        $response = $this->client->request('GET', self::API_URI, [
+            'query' => [
+                'apikey' => self::API_KEY,
+                'i' => $id
+            ]
+        ]);
 
-            return json_decode($response->getBody()->getContents(), true);
-        } catch (GuzzleException $e) {
-            print($e->getMessage());
-            die();
-        }
+        return json_decode($response->getBody()->getContents(), true);
     }
 }
