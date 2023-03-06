@@ -14,5 +14,8 @@
             "name": "mentalaffect",
             "email": "parismay.frontend@mail.ru"
         }
-    ]
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^9.6"
+    }
 }
