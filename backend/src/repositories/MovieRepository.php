@@ -10,12 +10,13 @@ use GuzzleHttp\ClientInterface;
 class MovieRepository implements MovieRepositoryInterface
 {
     private Client $client;
-    private const API_KEY = '1b16dec1';
+    private string $key;
     private const API_URI = 'https://www.omdbapi.com/';
 
-    public function __construct(ClientInterface $httpClient)
+    public function __construct(ClientInterface $httpClient, string $key)
     {
         $this->client = $httpClient;
+        $this->key = $key;
     }
 
     /**
@@ -30,7 +31,7 @@ class MovieRepository implements MovieRepositoryInterface
     {
         $response = $this->client->request('GET', self::API_URI, [
             'query' => [
-                'apikey' => self::API_KEY,
+                'apikey' => $this->key,
                 'i' => $id
             ]
         ]);
