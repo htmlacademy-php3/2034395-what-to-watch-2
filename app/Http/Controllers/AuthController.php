@@ -2,29 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
-    public function register(
-        string $email,
-        string $password,
-        string $passwordConfirmation,
-        string $name,
-        string $photoUrl
-    ): string
+    public function register(Request $request): JsonResponse
     {
-        return '';
+        return response()->json(['token' => '1234']);
     }
 
-    public function login(string $email, string $password): string
+    public function login(Request $request): JsonResponse
     {
-        return '';
+        return response()->json(['token' => '1234']);
     }
 
-    public function logout(): void
+    public function logout(): Response
     {
-
+        return response('logged out');
     }
 }

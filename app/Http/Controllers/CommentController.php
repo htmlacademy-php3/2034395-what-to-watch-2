@@ -3,26 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 
 class CommentController extends Controller
 {
-    public function get(int $filmId): array
+    public function get(Request $request): JsonResponse
     {
-        return [];
+        return response()->json(['comments' => []]);
     }
 
-    public function add(int $filmId, string $text, int $rating): void
+    public function add(Request $request): Response
     {
-
+        return response('added');
     }
 
-    public function change(int $id, string $text, int $rating): void
+    public function change(Request $request): Response
     {
-
+        return response('changed');
     }
 
-    public function delete(int $id): void
+    public function delete(Request $request): Response
     {
-
+        return response('deleted');
     }
 }

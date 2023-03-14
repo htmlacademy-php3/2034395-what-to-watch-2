@@ -2,64 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Film;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class FilmsController extends Controller
 {
-    public function getAll(?int $page, ?string $genre, ?string $status, ?string $orderBy, ?string $orderTo): array
+    public function getAll(Request $request): JsonResponse
     {
-        return [];
+        return response()->json(['films' => []]);
     }
 
-    public function get(int $id): array
+    public function get(Film $film): JsonResponse
     {
-        return [];
+        return response()->json(['film' => []]);
     }
 
-    public function getFavorite(int $userId): array
+    public function similar(Request $request): JsonResponse
     {
-        return [];
+        return response()->json(['films' => []]);
     }
 
-    public function addToFavorite(int $filmId, string $status): void
+    public function add(Request $request): Response
     {
-
+        return response('added');
     }
 
-    public function deleteFromFavorite(int $filmId): void
+    public function change(Request $request): Response
     {
-
-    }
-
-    public function similar(int $id): array
-    {
-        return [];
-    }
-
-    public function add(string $imdbId): void
-    {
-
-    }
-
-    public function change(
-        int     $id,
-        ?string $name,
-        ?string $posterImageUrl,
-        ?string $previewImageUrl,
-        ?string $bgImageUrl,
-        ?string $bgColor,
-        ?string $videoLink,
-        ?string $previewVideoLink,
-        ?string $description,
-        ?string $director,
-        ?array  $starring,
-        ?string $genre,
-        ?int    $runTime,
-        ?int    $released,
-        ?string $imdbId,
-        ?string $status
-    ): void
-    {
-
+        return response('changed');
     }
 }

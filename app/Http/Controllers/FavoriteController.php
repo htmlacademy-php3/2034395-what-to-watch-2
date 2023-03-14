@@ -6,15 +6,20 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 
-class PromoController extends Controller
+class FavoriteController extends Controller
 {
     public function get(Request $request): JsonResponse
     {
-        return response()->json(['promo' => []]);
+        return response()->json(['favorite' => []]);
     }
 
     public function add(Request $request): Response
     {
         return response('added');
+    }
+
+    public function delete(Request $request): Response
+    {
+        return response('deleted');
     }
 }

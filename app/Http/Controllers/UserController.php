@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
-    public function get(int $id): User
+    public function get(Request $request): JsonResponse
     {
-        return new User();
+        return response()->json(['user' => []]);
     }
 
-    public function change(string $email, string $password, string $passwordConfirmation, string $name, string $photoUrl): void
+    public function change(Request $request): Response
     {
-
+        return response('changed');
     }
 }

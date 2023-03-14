@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FilmsController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\PromoController;
@@ -25,16 +26,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/films', [FilmsController::class, 'getAll']);
-Route::get('/films/{filmId}', [FilmsController::class, 'get']);
-Route::get('/films/{filmId}/similar', [FilmsController::class, 'similar']);
+Route::get('/films/{film}', [FilmsController::class, 'get']);
+Route::get('/films/{film}/similar', [FilmsController::class, 'similar']);
 Route::post('/films', [FilmsController::class, 'add']);
 Route::patch('/films/{filmId}', [FilmsController::class, 'change']);
 
 Route::get('/promo', [PromoController::class, 'get']);
 
-Route::get('/favorite', [FilmsController::class, 'getFavorite']);
-Route::post('/favorite/{filmId}/{status}', [FilmsController::class, 'addToFavorite']);
-Route::delete('/favorite/{filmId}', [FilmsController::class, 'deleteFromFavorite']);
+Route::get('/favorite', [FavoriteController::class, 'get']);
+Route::post('/favorite/{filmId}/{status}', [FavoriteController::class, 'add']);
+Route::delete('/favorite/{filmId}', [FavoriteController::class, 'delete']);
 
 Route::get('/comments/{filmId}', [CommentController::class, 'get']);
 Route::post('/comments/{filmId}', [CommentController::class, 'add']);
