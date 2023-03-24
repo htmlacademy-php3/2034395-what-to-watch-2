@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Responses\Success;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class FavoriteController extends Controller
 {
-    public function get(Request $request): JsonResponse
+    public function get(Request $request): Response
     {
-        return response()->json(['favorite' => []]);
+        return (new Success(['id' => 1, 'name' => 'film name']))->toResponse($request);
     }
 
     public function add(Request $request): Response
     {
-        return response('added');
+        return (new Success(['id' => 1, 'name' => 'film name']))->toResponse($request);
     }
 
     public function delete(Request $request): Response
     {
-        return response('deleted');
+        return (new Success(['id' => 1, 'name' => 'film name']))->toResponse($request);
     }
 }

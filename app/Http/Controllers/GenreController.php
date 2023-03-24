@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Responses\Success;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class GenreController extends Controller
 {
-    public function getAll(Request $request): JsonResponse
+    public function getAll(Request $request): Response
     {
-        return response()->json(['genres' => []]);
+        return (new Success(['id' => 1, 'genre' => 'genre name']))->toResponse($request);
     }
 
     public function change(Request $request): Response
     {
-        return response('changed');
+        return (new Success(['id' => 1, 'genre' => 'genre name']))->toResponse($request);
     }
 }
