@@ -2,24 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
+use App\Http\Responses\Success;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
-    public function register(Request $request): JsonResponse
+    public function register(Request $request): Response
     {
-        return response()->json(['token' => '1234']);
+        return (new Success(['token' => '1234']))->toResponse($request);
     }
 
-    public function login(Request $request): JsonResponse
+    public function login(Request $request): Response
     {
-        return response()->json(['token' => '1234']);
+        return (new Success(['token' => '1234']))->toResponse($request);
     }
 
-    public function logout(): Response
+    public function logout(): void
     {
-        return response('logged out');
     }
 }
