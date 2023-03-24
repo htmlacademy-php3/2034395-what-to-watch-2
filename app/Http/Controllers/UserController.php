@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Responses\Success;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
-    public function get(Request $request): Response
+    public function get(Request $request): JsonResponse
     {
-        return (new Success(['id' => 1, 'name' => 'user name']))->toResponse($request);
+        return response()->json(['user' => []]);
     }
 
     public function change(Request $request): Response
     {
-        return (new Success(['id' => 1, 'name' => 'user name']))->toResponse($request);
+        return response('changed');
     }
 }

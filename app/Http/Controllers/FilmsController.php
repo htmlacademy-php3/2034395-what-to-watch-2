@@ -2,35 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Responses\Success;
 use App\Models\Film;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class FilmsController extends Controller
 {
-    public function getAll(Request $request): Response
+    public function getAll(Request $request): JsonResponse
     {
-        return (new Success(['id' => 1, 'name' => 'film name']))->toResponse($request);
+        return response()->json(['films' => []]);
     }
 
-    public function get(Request $request): Response
+    public function get(Film $film): JsonResponse
     {
-        return (new Success(['id' => 1, 'name' => 'film name']))->toResponse($request);
+        return response()->json(['film' => []]);
     }
 
-    public function similar(Request $request): Response
+    public function similar(Request $request): JsonResponse
     {
-        return (new Success(['id' => 1, 'name' => 'film name']))->toResponse($request);
+        return response()->json(['films' => []]);
     }
 
     public function add(Request $request): Response
     {
-        return (new Success(['id' => 1, 'name' => 'film name']))->toResponse($request);
+        return response('added');
     }
 
     public function change(Request $request): Response
     {
-        return (new Success(['id' => 1, 'name' => 'film name']))->toResponse($request);
+        return response('changed');
     }
 }
