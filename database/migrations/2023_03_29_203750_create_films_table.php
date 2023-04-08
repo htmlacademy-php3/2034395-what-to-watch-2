@@ -12,19 +12,19 @@ return new class extends Migration {
     {
         Schema::create('films', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('poster_image')->nullable();
-            $table->string('preview_image')->nullable();
-            $table->string('background_image')->nullable();
-            $table->string('background_color', 9)->nullable();
-            $table->string('video_link')->nullable();
-            $table->string('preview_video_link')->nullable();
-            $table->string('description', 1000)->nullable();
-            $table->string('director')->nullable();
+            $table->text('name');
+            $table->text('poster_image')->nullable();
+            $table->text('preview_image')->nullable();
+            $table->text('background_image')->nullable();
+            $table->text('background_color')->nullable();
+            $table->text('video_link')->nullable();
+            $table->text('preview_video_link')->nullable();
+            $table->text('description')->nullable();
+            $table->text('director')->nullable();
             $table->integer('run_time')->nullable();
             $table->integer('released')->nullable();
             $table->string('imdb_id')->unique();
-            $table->string('status');
+            $table->text('status');
             $table->boolean('is_promo');
             $table->timestamps();
         });
