@@ -3,11 +3,24 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * User Eloquent Model
+ *
+ * @property integer $id
+ * @property string $email
+ * @property string $password
+ * @property string $name
+ * @property string $file
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -21,6 +34,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'file',
     ];
 
     /**
@@ -30,7 +44,6 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     /**
@@ -39,6 +52,27 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
+
+    /**
+     * Get user favorites films
+     *
+     * @return HasMany
+     */
+    public function favorites(): HasMany
+    {
+        return $this->hasMany('Favorite');
+    }
+
+    /**
+     * Get user comments
+     *
+     * @return HasMany
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany('Comment');
+    }
 }
