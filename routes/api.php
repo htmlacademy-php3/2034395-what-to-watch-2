@@ -21,37 +21,38 @@ use App\Http\Controllers\UserController;
 |
 */
 
+Route::prefix('user')->name('user.')->middleware('auth:sanctum')->group(function () {
+    Route::get('/user', [UserController::class, 'get'])->name('user.get');
+    Route::patch('/user', [UserController::class, 'change'])->name('user.change');
+    Route::post('/films', [FilmsController::class, 'add'])->name('film.add');
+    Route::patch('/films/{film}', [FilmsController::class, 'change'])->name('film.change');
+    Route::get('/favorite', [FavoriteController::class, 'get'])->name('favorite.get');
+    Route::post('/favorite/{film}/{status}', [FavoriteController::class, 'add'])->name('favorite.add');
+    Route::delete('/favorite/{film}', [FavoriteController::class, 'delete'])->name('favorite.delete');
+    Route::post('/comments/{film}', [CommentController::class, 'add'])->name('comment.add');
+    Route::patch('/comments/{comment}', [CommentController::class, 'change'])->name('comment.change');
+    Route::delete('/comments/{comment}', [CommentController::class, 'delete'])->name('comment.delete');
+    Route::post('/promo/{film}', [PromoController::class, 'add'])->name('promo.add');
+    Route::patch('/genres/{genre}', [GenreController::class, 'change'])->name('genre.change');
+    Route::delete('/logout', [AuthController::class, 'logout'])->name('logout');
+
+});
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/films', [FilmsController::class, 'getAll']);
-Route::get('/films/{film}', [FilmsController::class, 'get']);
-Route::get('/films/{film}/similar', [FilmsController::class, 'similar']);
-Route::post('/films', [FilmsController::class, 'add']);
-Route::patch('/films/{film}', [FilmsController::class, 'change']);
+Route::get('/films', [FilmsController::class, 'getAll'])->name('films.get');
+Route::get('/films/{film}', [FilmsController::class, 'get'])->name('film.get');
+Route::get('/films/{film}/similar', [FilmsController::class, 'similar'])->name('similar.get');
 
-Route::get('/promo', [PromoController::class, 'get']);
+Route::get('/promo', [PromoController::class, 'get'])->name('promo.get');
 
-Route::get('/favorite', [FavoriteController::class, 'get']);
-Route::post('/favorite/{film}/{status}', [FavoriteController::class, 'add']);
-Route::delete('/favorite/{film}', [FavoriteController::class, 'delete']);
+Route::get('/comments/{film}', [CommentController::class, 'get'])->name('comments.get');
 
-Route::get('/comments/{film}', [CommentController::class, 'get']);
-Route::post('/comments/{film}', [CommentController::class, 'add']);
-Route::patch('/comments/{comment}', [CommentController::class, 'change']);
-Route::delete('/comments/{comment}', [CommentController::class, 'delete']);
+Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-Route::get('/login', [AuthController::class, 'login']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register'])->name('register');
 
-Route::delete('/logout', [AuthController::class, 'logout']);
-
-Route::post('/register', [AuthController::class, 'register']);
-
-Route::get('/user', [UserController::class, 'get']);
-Route::patch('/user', [UserController::class, 'change']);
-
-Route::get('/genres', [GenreController::class, 'getAll']);
-Route::patch('/genres/{genre}', [GenreController::class, 'change']);
-
+Route::get('/genres', [GenreController::class, 'getAll'])->name('genres.get');
