@@ -7,16 +7,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
- * Actor Eloquent Model
+ * Role Eloquent Model
  *
  * @property integer $id
  * @property string $name
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-class Actor extends Model
+class Role extends Model
 {
     use SoftDeletes, HasFactory;
 
@@ -40,12 +43,10 @@ class Actor extends Model
     ];
 
     /**
-     * Get actor films
-     *
-     * @return HasMany
+     * Get users with role
      */
-    public function films(): HasMany
+    public function users(): HasMany
     {
-        return $this->hasMany('FilmActor');
+        return $this->hasMany('UserRole');
     }
 }

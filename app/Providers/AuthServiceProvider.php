@@ -3,7 +3,11 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+use App\Models\Comment;
+use App\Models\User;
+use http\Env\Request;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -21,6 +25,12 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::define('comment.delete', function (User $user) {
+            return $user->isModerator();
+        });
+
+        Gate::define('comment.change', function (User $user, Comment $comment) {
+            return $user->id === $comment->user_id && empty($comment->reply()) || $user->isModerator();
+        });
     }
 }

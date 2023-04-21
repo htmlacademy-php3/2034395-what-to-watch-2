@@ -7,16 +7,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
- * Actor Eloquent Model
+ * Film Actor Eloquent Model
  *
  * @property integer $id
- * @property string $name
+ * @property integer $film_id
+ * @property integer $actor_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-class Actor extends Model
+class FilmActor extends Model
 {
     use SoftDeletes, HasFactory;
 
@@ -26,7 +30,8 @@ class Actor extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'film_id',
+        'actor_id',
     ];
 
     /**
@@ -38,14 +43,4 @@ class Actor extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
-
-    /**
-     * Get actor films
-     *
-     * @return HasMany
-     */
-    public function films(): HasMany
-    {
-        return $this->hasMany('FilmActor');
-    }
 }

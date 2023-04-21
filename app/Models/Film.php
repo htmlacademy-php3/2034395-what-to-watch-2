@@ -73,7 +73,7 @@ class Film extends Model
      */
     public function genres(): HasMany
     {
-        return $this->hasMany('Genre');
+        return $this->hasMany('FilmGenre');
     }
 
     /**
@@ -83,7 +83,7 @@ class Film extends Model
      */
     public function actors(): HasMany
     {
-        return $this->hasMany('Actor');
+        return $this->hasMany('FilmActor');
     }
 
     /**

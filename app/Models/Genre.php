@@ -46,6 +46,6 @@ class Genre extends Model
      */
     public function films(): HasMany
     {
-        return $this->hasMany('Film');
+        return $this->hasMany('FilmGenre');
     }
 }
