@@ -15,7 +15,7 @@ abstract class Base implements Responsable
     }
 
     /** @inheritDoc */
-    public function toResponse($request): Response
+    public function toResponse($request = null): Response
     {
         return response()->json($this->makeResponseData(), $this->statusCode);
     }

@@ -26,6 +26,7 @@ return new class extends Migration {
             $table->string('imdb_id')->unique();
             $table->text('status');
             $table->boolean('is_promo');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

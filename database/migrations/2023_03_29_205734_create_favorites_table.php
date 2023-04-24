@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(Film::class);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

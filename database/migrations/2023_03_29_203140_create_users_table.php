@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('password');
             $table->text('name');
             $table->text('file');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

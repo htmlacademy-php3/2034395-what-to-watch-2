@@ -21,7 +21,7 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::prefix('user')->name('user.')->middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [UserController::class, 'get'])->name('user.get');
     Route::patch('/user', [UserController::class, 'change'])->name('user.change');
     Route::post('/films', [FilmsController::class, 'add'])->name('film.add');
