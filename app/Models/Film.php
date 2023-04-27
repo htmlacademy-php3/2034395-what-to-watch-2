@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -69,21 +70,21 @@ class Film extends Model
     /**
      * Get film genres
      *
-     * @return HasMany
+     * @return BelongsToMany
      */
-    public function genres(): HasMany
+    public function genres(): BelongsToMany
     {
-        return $this->hasMany('FilmGenre');
+        return $this->belongsToMany(Genre::class, 'films_genres');
     }
 
     /**
      * Get film actors
      *
-     * @return HasMany
+     * @return BelongsToMany
      */
-    public function actors(): HasMany
+    public function actors(): BelongsToMany
     {
-        return $this->hasMany('FilmActor');
+        return $this->belongsToMany(Actor::class, 'films_actors');
     }
 
     /**
@@ -93,6 +94,38 @@ class Film extends Model
      */
     public function comments(): MorphMany
     {
-        return $this->morphMany('Comment', 'comment_type');
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    /**
+     * Get favorites
+     *
+     * @return HasMany
+     */
+    public function favorites(): HasMany
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    /**
+     * Get rating
+     *
+     * @return float
+     */
+    public function rating(): float
+    {
+        $comments = $this->comments()->where('rating', '>', 0)->get()->all();
+
+        $gradesSum = array_reduce($comments, function ($carry, $item) {
+            $carry += $item->rating;
+
+            return $carry;
+        }, 0);
+
+        if ($gradesSum > 0) {
+            return $gradesSum / count($comments);
+        }
+
+        return 0;
     }
 }

@@ -5,8 +5,10 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -53,20 +55,30 @@ class Comment extends Model
     /**
      * Get reply
      *
-     * @return HasOne
+     * @return BelongsTo
      */
-    public function reply(): hasOne
+    public function reply(): BelongsTo
     {
-        return $this->hasOne('Comment', 'reply_id');
+        return $this->belongsTo(Comment::class, 'reply_id');
     }
 
     /**
      * Get user
      *
-     * @returns HasOne
+     * @returns BelongsTo
      */
-    public function user(): HasOne
+    public function user(): BelongsTo
     {
-        return $this->hasOne('User');
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the parent commentable model
+     *
+     * @return MorphTo
+     */
+    public function commentable(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

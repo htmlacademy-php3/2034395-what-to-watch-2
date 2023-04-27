@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -42,10 +43,10 @@ class Actor extends Model
     /**
      * Get actor films
      *
-     * @return HasMany
+     * @return BelongsToMany
      */
-    public function films(): HasMany
+    public function films(): BelongsToMany
     {
-        return $this->hasMany('FilmActor');
+        return $this->belongsToMany(Film::class, 'films_actors');
     }
 }
