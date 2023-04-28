@@ -65,9 +65,9 @@ class Comment extends Model
     /**
      * Get user
      *
-     * @returns BelongsTo
+     * @returns BelongsTo|string
      */
-    public function user(): BelongsTo
+    public function user(): BelongsTo|string
     {
         return $this->belongsTo(User::class);
     }

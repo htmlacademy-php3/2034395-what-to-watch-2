@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->morphs('commentable');
             $table->text('text');
             $table->integer('rating');
-            $table->foreignIdFor(User::class);
+            $table->foreignIdFor(User::class)->nullable();
             $table->foreignIdFor(Comment::class, 'reply_id')->nullable();
             $table->softDeletes();
             $table->timestamps();

@@ -22,6 +22,11 @@ class CommentTest extends TestCase
             ->for(User::factory())
             ->create();
 
-        $this->assertIsString($comment->user()->first()->name);
+        $anonymousComment = Comment::factory()
+            ->for(Film::factory(), 'commentable')
+            ->create();
+
+        $this->assertIsString($comment->user()->first()?->name);
+        $this->assertNull($anonymousComment->user()->first()?->name);
     }
 }

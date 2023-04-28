@@ -19,11 +19,18 @@ class FilmTest extends TestCase
     {
         $film = Film::factory()
             ->has(
-                Comment::factory(10, ['rating' => 4])
+                Comment::factory(10)
                     ->for(User::factory())
             )
             ->create();
 
-        $this->assertEquals(4, $film->rating());
+        $ratingSum = array_reduce($film->comments()->get()->all(), function ($carry, $item) {
+            $carry += $item->rating;
+            return $carry;
+        }, 0);
+
+        $expectedRating = $ratingSum / count($film->comments()->get()->all());
+
+        $this->assertEquals($expectedRating, $film->rating());
     }
 }
