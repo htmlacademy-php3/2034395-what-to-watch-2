@@ -14,11 +14,11 @@ return new class extends Migration {
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->morphs('comment');
+            $table->morphs('commentable');
             $table->text('text');
             $table->integer('rating');
-            $table->foreignIdFor(User::class);
-            $table->foreignIdFor(Comment::class, 'reply_id');
+            $table->foreignIdFor(User::class)->nullable();
+            $table->foreignIdFor(Comment::class, 'reply_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

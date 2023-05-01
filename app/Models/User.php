@@ -5,7 +5,10 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -64,31 +67,31 @@ class User extends Authenticatable
      */
     public function favorites(): HasMany
     {
-        return $this->hasMany('Favorite');
+        return $this->hasMany(Favorite::class);
     }
 
     /**
      * Get user comments
      *
-     * @return HasMany
+     * @return MorphMany
      */
-    public function comments(): HasMany
+    public function comments(): MorphMany
     {
-        return $this->hasMany('Comment');
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     /**
      * Get user roles
      *
-     * @return HasMany
+     * @return BelongsToMany
      */
-    public function roles(): HasMany
+    public function roles(): BelongsToMany
     {
-        return $this->hasMany('UserRole');
+        return $this->belongsToMany(Role::class, 'users_roles');
     }
 
     public function isModerator(): bool
     {
-        return true;
+        return $this->roles()->where('name', '=', 'moderator')->exists();
     }
 }
