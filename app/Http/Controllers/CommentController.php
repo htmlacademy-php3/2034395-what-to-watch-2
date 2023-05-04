@@ -5,56 +5,100 @@ namespace App\Http\Controllers;
 use App\Http\Responses\Fail;
 use App\Http\Responses\Success;
 use App\Models\Comment;
+use App\Models\Film;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use LogicException;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CommentController extends Controller
 {
-    public function get(Request $request): Response
-    {
-        return (new Success(['id' => 1]))->toResponse($request);
-    }
-
-    public function add(Request $request): Response
-    {
-        return (new Success(['id' => 1]))->toResponse($request);
-    }
-
-    public function change(Request $request): Response
+    public function getAll(Request $request, string $type, int $id): Response
     {
         try {
-            $data = $this->getPostData($request);
+            $types = config('app.morph_aliases');
 
-            $comment = Comment::query()->find($data['comment_id']);
+            throw_if(
+                !in_array($type, array_keys($types)),
+                new BadRequestException('Bad Request', Response::HTTP_BAD_REQUEST),
+            );
 
-            if (!$comment) {
-                throw new NotFoundHttpException('Comment not found', null, Response::HTTP_NOT_FOUND);
-            }
+            $commentable = $types[$type]::query()->find($id)->first();
 
-            if (Gate::allows('comment.change', $comment)) {
-                $comment->update($data);
+            throw_if(
+                !$commentable || !$commentable->comments(),
+                new NotFoundHttpException('Not Found', null, Response::HTTP_NOT_FOUND),
+            );
 
-                return (new Success(null, Response::HTTP_CREATED))->toResponse();
-            } else {
-                return (new Fail(null, 'Action forbidden', Response::HTTP_FORBIDDEN))->toResponse();
-            }
-        } catch (LogicException|NotFoundHttpException $exception) {
-            return (new Fail(null, $exception->getMessage(), $exception->getCode()))->toResponse();
+            return (new Success($commentable->comments()->get()->all()))->toResponse($request);
+        } catch (NotFoundHttpException $error) {
+            return (new Fail([], $error->getMessage(), $error->getCode()))->toResponse($request);
         }
     }
 
-    public function delete(Comment $comment): Response
+    public function add(Request $request, string $type, int $id): Response
     {
-        if (Gate::allows('comment.delete', $comment)) {
+        try {
+            $types = config('app.morph_aliases');
+
+            $data = $request->post();
+
+            throw_if(
+                !isset($data) || !in_array($type, array_keys($types)),
+                new BadRequestException('Bad Request', Response::HTTP_BAD_REQUEST),
+            );
+
+            $commentable = $types[$type]::query()->find($id)->first();
+
+            throw_if(
+                !$commentable,
+                new NotFoundHttpException('Not Found', null, Response::HTTP_NOT_FOUND),
+            );
+
+            $comment = $commentable->comments()->create($data);
+
+            return (new Success($comment))->toResponse($request);
+        } catch (BadRequestException|NotFoundHttpException $error) {
+            return (new Fail([], $error->getMessage(), $error->getCode()))->toResponse($request);
+        }
+    }
+
+    public function change(Request $request, Comment $comment): Response
+    {
+        try {
+            $data = $request->post();
+
+            throw_if(
+                !Gate::allows('comment.change', $comment),
+                new AccessDeniedException('Forbidden', Response::HTTP_FORBIDDEN),
+            );
+
+            $comment->update($data);
+
+            return (new Success($comment, Response::HTTP_CREATED))->toResponse($request);
+        } catch (BadRequestException|NotFoundHttpException|AccessDeniedException $exception) {
+            return (new Fail([], $exception->getMessage(), $exception->getCode()))->toResponse($request);
+        }
+    }
+
+    public function delete(Request $request, Comment $comment): Response
+    {
+        try {
+            throw_if(
+                !Gate::allows('comment.delete'),
+                new AccessDeniedException('Forbidden', Response::HTTP_FORBIDDEN),
+            );
+
             $comment->delete();
 
-            return (new Success(null, Response::HTTP_CREATED))->toResponse();
-        } else {
-            return (new Fail(null, 'Action forbidden', Response::HTTP_FORBIDDEN))->toResponse();
+            return (new Success([], Response::HTTP_CREATED))->toResponse($request);
+        } catch (BadRequestException|NotFoundHttpException|AccessDeniedException $error) {
+            return (new Fail([], $error->getMessage(), $error->getCode()))->toResponse($request);
         }
     }
 }

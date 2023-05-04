@@ -30,7 +30,11 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('comment.change', function (User $user, Comment $comment) {
-            return $user->id === $comment->user_id && empty($comment->reply()) || $user->isModerator();
+            if ($user->isModerator() || $comment->user_id === $user->id) {
+                return !$comment->reply()->exists();
+            }
+
+            return false;
         });
     }
 }
