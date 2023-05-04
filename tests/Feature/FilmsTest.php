@@ -19,7 +19,8 @@ class FilmsTest extends TestCase
         $response = $this->getJson(route('films.get'));
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(['data' => []]);
+        $response->assertJsonStructure(['data' => ['films' => [], 'total']]);
+        $response->assertJsonFragment(['total' => 10]);
     }
 
     public function testGetFilm()
@@ -29,7 +30,7 @@ class FilmsTest extends TestCase
         $response = $this->getJson(route('film.get', ['film' => $film->id]));
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(['data' => []]);
+        $response->assertJsonStructure(['data' => ['film' => []]]);
     }
 
     public function testAddFilm()
@@ -50,7 +51,7 @@ class FilmsTest extends TestCase
         );
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(['data' => []]);
+        $response->assertJsonStructure(['data' => ['film' => []]]);
     }
 
     public function testChangeFilm()
@@ -68,6 +69,6 @@ class FilmsTest extends TestCase
         );
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(['data' => []]);
+        $response->assertJsonStructure(['data' => ['film' => []]]);
     }
 }

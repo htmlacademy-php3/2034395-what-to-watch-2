@@ -24,7 +24,8 @@ class CommentsTest extends TestCase
         $response = $this->getJson(route('comments.get', ['type' => 'film', 'id' => $film->id]));
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(['data' => []]);
+        $response->assertJsonStructure(['data' => ['comments' => [], 'total']]);
+        $response->assertJsonFragment(['total' => 10]);
     }
 
     public function testAddComment()
@@ -43,7 +44,7 @@ class CommentsTest extends TestCase
         );
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(['data' => []]);
+        $response->assertJsonStructure(['data' => ['comment' => []]]);
     }
 
     public function testAddAnonymousComment()
@@ -59,7 +60,7 @@ class CommentsTest extends TestCase
         );
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(['data' => []]);
+        $response->assertJsonStructure(['data' => ['comment' => []]]);
     }
 
     public function testChangeComment()
@@ -78,7 +79,7 @@ class CommentsTest extends TestCase
         );
 
         $response->assertStatus(201);
-        $response->assertJsonStructure(['data' => []]);
+        $response->assertJsonStructure(['data' => ['comment' => []]]);
     }
 
     public function testChangeAnonymousCommentByModerator()
@@ -98,7 +99,7 @@ class CommentsTest extends TestCase
         );
 
         $response->assertStatus(201);
-        $response->assertJsonStructure(['data' => []]);
+        $response->assertJsonStructure(['data' => ['comment' => []]]);
     }
 
     public function testDeleteComment()
@@ -118,6 +119,6 @@ class CommentsTest extends TestCase
         );
 
         $response->assertStatus(201);
-        $response->assertJsonStructure(['data' => []]);
+        $response->assertJsonStructure(['data' => ['comment' => []]]);
     }
 }
