@@ -40,6 +40,7 @@ class GenresTest extends TestCase
             ['name' => 'Триллер'],
         );
 
+        $response->assertValid();
         $response->assertStatus(201);
         $response->assertJsonStructure(['data' => ['genre' => []]]);
     }
@@ -53,6 +54,7 @@ class GenresTest extends TestCase
             ['name' => 'Комедия'],
         );
 
+        $response->assertValid();
         $response->assertStatus(200);
         $response->assertJsonStructure(['data' => ['genre' => []]]);
     }

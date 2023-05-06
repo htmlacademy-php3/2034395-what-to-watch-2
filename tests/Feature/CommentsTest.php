@@ -51,6 +51,8 @@ class CommentsTest extends TestCase
             ],
         );
 
+        $this->assertAuthenticated();
+        $response->assertValid();
         $response->assertStatus(201);
         $response->assertJsonStructure(['data' => ['comment' => []]]);
         $response->assertJsonFragment(['user_id' => Auth::user()->id]);
@@ -70,6 +72,8 @@ class CommentsTest extends TestCase
             ],
         );
 
+        $this->assertGuest();
+        $response->assertValid();
         $response->assertStatus(201);
         $response->assertJsonStructure(['data' => ['comment' => []]]);
     }
@@ -84,6 +88,8 @@ class CommentsTest extends TestCase
             ['Accept' => 'application/json'],
         );
 
+        $this->assertAuthenticated();
+        $response->assertValid();
         $response->assertStatus(200);
         $response->assertJsonStructure(['data' => ['comment' => []]]);
     }
@@ -97,6 +103,7 @@ class CommentsTest extends TestCase
             ['text' => 'Changed test comment text'],
         );
 
+        $response->assertValid();
         $response->assertStatus(200);
         $response->assertJsonStructure(['data' => ['comment' => []]]);
     }

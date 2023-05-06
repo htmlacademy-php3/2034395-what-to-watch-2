@@ -55,6 +55,7 @@ class FilmsTest extends TestCase
             ]
         );
 
+        $response->assertValid();
         $response->assertStatus(201);
         $response->assertJsonStructure(['data' => ['film' => []]]);
     }
@@ -68,6 +69,7 @@ class FilmsTest extends TestCase
             ['name' => 'The Shawshank Redemption'],
         );
 
+        $response->assertValid();
         $response->assertStatus(200);
         $response->assertJsonStructure(['data' => ['film' => []]]);
     }
