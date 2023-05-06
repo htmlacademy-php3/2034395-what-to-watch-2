@@ -3,9 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Film;
-use App\Models\Genre;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class FilmsTest extends TestCase
@@ -35,9 +36,9 @@ class FilmsTest extends TestCase
 
     public function testAddFilm()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->has(Role::factory())->create();
 
-        $token = $user->createToken('auth-token')->plainTextToken;
+        Auth::login($user);
 
         $response = $this->postJson(
             route('film.add'),
@@ -46,11 +47,10 @@ class FilmsTest extends TestCase
                 'imdb_id' => 'tt0111161',
                 'status' => 'ready',
                 'is_promo' => false,
-            ],
-            ['Authorization' => "Bearer $token"],
+            ]
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJsonStructure(['data' => ['film' => []]]);
     }
 
@@ -58,14 +58,13 @@ class FilmsTest extends TestCase
     {
         $film = Film::factory()->create();
 
-        $user = User::factory()->create();
+        $user = User::factory()->has(Role::factory())->create();
 
-        $token = $user->createToken('auth-token')->plainTextToken;
+        Auth::login($user);
 
         $response = $this->patchJson(
-            route('film.change'),
-            ['id' => $film->id, 'name' => 'The Shawshank Redemption'],
-            ['Authorization' => "Bearer $token"],
+            route('film.change', ['film' => $film->id]),
+            ['name' => 'The Shawshank Redemption'],
         );
 
         $response->assertStatus(200);

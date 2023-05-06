@@ -14,28 +14,24 @@ class AuthController extends Controller
     public function register(UserRequest $request): Response
     {
         $params = $request->safe()->except('file');
-        $user = User::create($params);
-        $token = $user->createToken('auth-token');
 
-        return (new Success([
-            'user' => $user,
-            'token' => $token->plainTextToken,
-        ]))->toResponse($request);
+        $user = User::query()->create($params);
+
+        Auth::login($user);
+
+        return (new Success(['user' => $user]))->toResponse($request);
     }
 
     public function login(LoginRequest $request): Response
     {
-        if (!Auth::attempt($request->validated())) {
-            abort(401, trans('auth.failed'));
-        }
+        abort_if(!Auth::attempt($request->validated()), Response::HTTP_UNAUTHORIZED, trans('auth.failed'));
 
-        $token = Auth::user()->createToken('auth-token');
-
-        return (new Success(['token' => $token->plainTextToken]))->toResponse($request);
+        return (new Success(['status' => 'ok']))->toResponse($request);
     }
 
     public function logout(): void
     {
         Auth::user()->tokens()->delete();
+        Auth::logout();
     }
 }

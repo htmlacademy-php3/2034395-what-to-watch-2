@@ -34,17 +34,19 @@ class CommentsTest extends TestCase
 
         $film = Film::factory()->create();
 
+        Auth::login($user);
+
         $response = $this->postJson(
             route('comment.add', ['type' => 'film', 'id' => $film->id]),
             [
                 'text' => 'Test comment',
                 'rating' => '4',
-                'user_id' => $user->id,
             ],
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJsonStructure(['data' => ['comment' => []]]);
+        $response->assertJsonFragment(['user_id' => $user->id]);
     }
 
     public function testAddAnonymousComment()
@@ -59,7 +61,7 @@ class CommentsTest extends TestCase
             ],
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJsonStructure(['data' => ['comment' => []]]);
     }
 
@@ -70,15 +72,15 @@ class CommentsTest extends TestCase
             ->for(User::factory())
             ->create();
 
-        $token = $comment->user()->get()->first()->createToken('auth-token')->plainTextToken;
+        Auth::login($comment->user()->get()->first());
 
         $response = $this->patchJson(
             route('comment.change', ['comment' => $comment->id]),
             ['text' => 'Changed test comment text'],
-            ['Authorization' => "Bearer $token"],
+            ['Accept' => 'application/json'],
         );
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
         $response->assertJsonStructure(['data' => ['comment' => []]]);
     }
 
@@ -90,15 +92,14 @@ class CommentsTest extends TestCase
 
         $user = User::factory()->has(Role::factory())->create();
 
-        $token = $user->createToken('auth-token')->plainTextToken;
+        Auth::login($user);
 
         $response = $this->patchJson(
             route('comment.change', ['comment' => $comment->id]),
             ['text' => 'Changed test comment text'],
-            ['Authorization' => "Bearer $token"],
         );
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
         $response->assertJsonStructure(['data' => ['comment' => []]]);
     }
 
@@ -110,13 +111,9 @@ class CommentsTest extends TestCase
 
         $user = User::factory()->has(Role::factory())->create();
 
-        $token = $user->createToken('auth-token')->plainTextToken;
+        Auth::login($user);
 
-        $response = $this->deleteJson(
-            route('comment.delete', ['comment' => $comment->id]),
-            [],
-            ['Authorization' => "Bearer $token"],
-        );
+        $response = $this->deleteJson(route('comment.delete', ['comment' => $comment->id]));
 
         $response->assertStatus(201);
         $response->assertJsonStructure(['data' => ['comment' => []]]);

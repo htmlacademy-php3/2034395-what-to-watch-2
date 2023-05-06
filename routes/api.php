@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [UserController::class, 'get'])->name('user.get');
     Route::patch('/user', [UserController::class, 'change'])->name('user.change');
     Route::post('/films', [FilmsController::class, 'add'])->name('film.add');
-    Route::patch('/films', [FilmsController::class, 'change'])->name('film.change');
+    Route::patch('/films/{film}', [FilmsController::class, 'change'])->name('film.change');
     Route::patch('/comments/{comment}', [CommentController::class, 'change'])->name('comment.change');
     Route::delete('/comments/{comment}', [CommentController::class, 'delete'])->name('comment.delete');
     Route::get('/favorite', [FavoriteController::class, 'get'])->name('favorite.get');
@@ -33,7 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/favorite/{film}', [FavoriteController::class, 'delete'])->name('favorite.delete');
     Route::post('/promo/{film}', [PromoController::class, 'add'])->name('promo.add');
     Route::post('/genres', [GenreController::class, 'add'])->name('genre.add');
-    Route::patch('/genres', [GenreController::class, 'change'])->name('genre.change');
+    Route::patch('/genres/{genre}', [GenreController::class, 'change'])->name('genre.change');
     Route::delete('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 

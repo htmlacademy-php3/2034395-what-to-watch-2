@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Genre;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class GenresTest extends TestCase
@@ -24,17 +26,16 @@ class GenresTest extends TestCase
 
     public function testAddGenre()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->has(Role::factory())->create();
 
-        $token = $user->createToken('auth-token')->plainTextToken;
+        Auth::login($user);
 
         $response = $this->postJson(
             route('genre.add'),
             ['name' => 'Триллер'],
-            ['Authorization' => "Bearer $token"],
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJsonStructure(['data' => ['genre' => []]]);
     }
 
@@ -42,14 +43,13 @@ class GenresTest extends TestCase
     {
         $genre = Genre::factory()->create();
 
-        $user = User::factory()->create();
+        $user = User::factory()->has(Role::factory())->create();
 
-        $token = $user->createToken('auth-token')->plainTextToken;
+        Auth::login($user);
 
         $response = $this->patchJson(
-            route('genre.change'),
-            ['id' => $genre->id, 'name' => 'Комедия'],
-            ['Authorization' => "Bearer $token"],
+            route('genre.change', ['genre' => $genre->id]),
+            ['name' => 'Комедия'],
         );
 
         $response->assertStatus(200);
