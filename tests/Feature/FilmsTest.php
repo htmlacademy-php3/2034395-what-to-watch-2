@@ -13,10 +13,19 @@ class FilmsTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testGetFilmsList()
+    protected function setUp(): void
     {
+        parent::setUp();
+
         Film::factory(10)->create();
 
+        $user = User::factory()->has(Role::factory())->create();
+
+        Auth::login($user);
+    }
+
+    public function testGetFilmsList()
+    {
         $response = $this->getJson(route('films.get'));
 
         $response->assertStatus(200);
@@ -26,7 +35,7 @@ class FilmsTest extends TestCase
 
     public function testGetFilm()
     {
-        $film = Film::factory()->create();
+        $film = Film::query()->inRandomOrder()->get()->first();
 
         $response = $this->getJson(route('film.get', ['film' => $film->id]));
 
@@ -36,10 +45,6 @@ class FilmsTest extends TestCase
 
     public function testAddFilm()
     {
-        $user = User::factory()->has(Role::factory())->create();
-
-        Auth::login($user);
-
         $response = $this->postJson(
             route('film.add'),
             [
@@ -56,11 +61,7 @@ class FilmsTest extends TestCase
 
     public function testChangeFilm()
     {
-        $film = Film::factory()->create();
-
-        $user = User::factory()->has(Role::factory())->create();
-
-        Auth::login($user);
+        $film = Film::query()->inRandomOrder()->get()->first();
 
         $response = $this->patchJson(
             route('film.change', ['film' => $film->id]),

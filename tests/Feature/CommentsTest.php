@@ -14,12 +14,23 @@ class CommentsTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testGetCommentsList()
+    protected function setUp(): void
     {
-        $film = Film::factory()
+        parent::setUp();
+
+        Film::factory()
             ->has(Comment::factory(5)->for(User::factory()))
             ->has(Comment::factory(5))
             ->create();
+
+        $user = User::factory()->has(Role::factory())->create();
+
+        Auth::login($user);
+    }
+
+    public function testGetCommentsList()
+    {
+        $film = Film::query()->get()->first();
 
         $response = $this->getJson(route('comments.get', ['type' => 'film', 'id' => $film->id]));
 
@@ -30,11 +41,7 @@ class CommentsTest extends TestCase
 
     public function testAddComment()
     {
-        $user = User::factory()->create();
-
-        $film = Film::factory()->create();
-
-        Auth::login($user);
+        $film = Film::query()->get()->first();
 
         $response = $this->postJson(
             route('comment.add', ['type' => 'film', 'id' => $film->id]),
@@ -46,12 +53,14 @@ class CommentsTest extends TestCase
 
         $response->assertStatus(201);
         $response->assertJsonStructure(['data' => ['comment' => []]]);
-        $response->assertJsonFragment(['user_id' => $user->id]);
+        $response->assertJsonFragment(['user_id' => Auth::user()->id]);
     }
 
     public function testAddAnonymousComment()
     {
         $film = Film::factory()->create();
+
+        Auth::logout();
 
         $response = $this->postJson(
             route('comment.add', ['type' => 'film', 'id' => $film->id]),
@@ -67,12 +76,7 @@ class CommentsTest extends TestCase
 
     public function testChangeComment()
     {
-        $comment = Comment::factory()
-            ->for(Film::factory(), 'commentable')
-            ->for(User::factory())
-            ->create();
-
-        Auth::login($comment->user()->get()->first());
+        $comment = Comment::query()->inRandomOrder()->get()->first();
 
         $response = $this->patchJson(
             route('comment.change', ['comment' => $comment->id]),
@@ -86,13 +90,7 @@ class CommentsTest extends TestCase
 
     public function testChangeAnonymousCommentByModerator()
     {
-        $comment = Comment::factory()
-            ->for(Film::factory(), 'commentable')
-            ->create();
-
-        $user = User::factory()->has(Role::factory())->create();
-
-        Auth::login($user);
+        $comment = Comment::query()->whereNull('user_id')->get()->first();
 
         $response = $this->patchJson(
             route('comment.change', ['comment' => $comment->id]),
@@ -105,13 +103,7 @@ class CommentsTest extends TestCase
 
     public function testDeleteComment()
     {
-        $comment = Comment::factory()
-            ->for(Film::factory(), 'commentable')
-            ->create();
-
-        $user = User::factory()->has(Role::factory())->create();
-
-        Auth::login($user);
+        $comment = Comment::query()->inRandomOrder()->get()->first();
 
         $response = $this->deleteJson(route('comment.delete', ['comment' => $comment->id]));
 
