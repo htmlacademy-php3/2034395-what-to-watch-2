@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Films\AddFilmRequest;
 use App\Http\Requests\Films\ChangeFilmRequest;
 use App\Http\Responses\Success;
+use App\Jobs\AddFilm;
 use App\Models\Film;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,5 +41,12 @@ class FilmsController extends Controller
         $film->update($request->post());
 
         return (new Success(['film' => $film]))->toResponse($request);
+    }
+
+    public function request(Request $request): Response
+    {
+        AddFilm::dispatch($request->route('imdb_id'));
+
+        return (new Success(['status' => 'ok'], Response::HTTP_CREATED))->toResponse($request);
     }
 }
