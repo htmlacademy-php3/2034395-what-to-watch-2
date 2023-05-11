@@ -32,7 +32,7 @@ class CommentsTest extends TestCase
     {
         $film = Film::query()->get()->first();
 
-        $response = $this->getJson(route('comments.get', ['type' => 'film', 'id' => $film->id]));
+        $response = $this->getJson(route('comments.get', ['film' => $film->id]));
 
         $response->assertStatus(200);
         $response->assertJsonStructure(['data' => ['comments' => [], 'total']]);
@@ -44,7 +44,7 @@ class CommentsTest extends TestCase
         $film = Film::query()->get()->first();
 
         $response = $this->postJson(
-            route('comment.add', ['type' => 'film', 'id' => $film->id]),
+            route('comment.add', ['film' => $film->id]),
             [
                 'text' => 'Test comment',
                 'rating' => '4',
@@ -65,7 +65,7 @@ class CommentsTest extends TestCase
         Auth::logout();
 
         $response = $this->postJson(
-            route('comment.add', ['type' => 'film', 'id' => $film->id]),
+            route('comment.add', ['film' => $film->id]),
             [
                 'text' => 'Test comment',
                 'rating' => '4',

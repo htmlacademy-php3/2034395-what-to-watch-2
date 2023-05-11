@@ -18,12 +18,12 @@ class CommentTest extends TestCase
     public function test_comment(): void
     {
         $comment = Comment::factory()
-            ->for(Film::factory(), 'commentable')
+            ->for(Film::factory())
             ->for(User::factory())
             ->create();
 
         $anonymousComment = Comment::factory()
-            ->for(Film::factory(), 'commentable')
+            ->for(Film::factory())
             ->create();
 
         $this->assertIsString($comment->user()->first()?->name);

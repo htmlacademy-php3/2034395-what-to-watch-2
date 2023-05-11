@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Comments;
 
+use App\Models\Film;
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -9,11 +10,9 @@ class AddCommentRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $type = $this->route('type');
+        $film = Film::query()->find($this->route('film'))->first();
 
-        $types = config('app.morph_aliases');
-
-        abort_if(!in_array($type, array_keys($types)), Response::HTTP_NOT_FOUND, 'Commentable model not found');
+        abort_if(!$film->exists(), Response::HTTP_NOT_FOUND, 'Film not found');
 
         return true;
     }

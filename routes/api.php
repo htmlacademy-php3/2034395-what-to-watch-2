@@ -43,8 +43,8 @@ Route::get('/films/{film}/similar', [FilmsController::class, 'similar'])->name('
 
 Route::get('/promo', [PromoController::class, 'get'])->name('promo.get');
 
-Route::get('/comments/{type}/{id}', [CommentController::class, 'getAll'])->name('comments.get');
-Route::post('/comments/{type}/{id}', [CommentController::class, 'add'])->name('comment.add');
+Route::get('/comments/{film}', [CommentController::class, 'getAll'])->name('comments.get');
+Route::post('/comments/{film}', [CommentController::class, 'add'])->name('comment.add');
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
