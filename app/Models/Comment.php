@@ -6,9 +6,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -65,9 +62,9 @@ class Comment extends Model
     /**
      * Get user
      *
-     * @returns BelongsTo|string
+     * @returns BelongsTo
      */
-    public function user(): BelongsTo|string
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -75,10 +72,10 @@ class Comment extends Model
     /**
      * Get the parent commentable model
      *
-     * @return MorphTo
+     * @return BelongsTo
      */
-    public function commentable(): MorphTo
+    public function film(): BelongsTo
     {
-        return $this->morphTo();
+        return $this->belongsTo(Film::class);
     }
 }

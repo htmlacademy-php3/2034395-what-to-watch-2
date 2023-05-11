@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Genres\AddGenreRequest;
+use App\Http\Requests\Genres\ChangeGenreRequest;
 use App\Http\Responses\Success;
+use App\Models\Genre;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -10,11 +13,22 @@ class GenreController extends Controller
 {
     public function getAll(Request $request): Response
     {
-        return (new Success(['id' => 1, 'genre' => 'genre name']))->toResponse($request);
+        $genres = Genre::query()->get()->all();
+
+        return (new Success(['genres' => $genres, 'total' => count($genres)]))->toResponse($request);
     }
 
-    public function change(Request $request): Response
+    public function add(AddGenreRequest $request): Response
     {
-        return (new Success(['id' => 1, 'genre' => 'genre name']))->toResponse($request);
+        $genre = Genre::query()->create($request->post());
+
+        return (new Success(['genre' => $genre], Response::HTTP_CREATED))->toResponse($request);
+    }
+
+    public function change(ChangeGenreRequest $request, Genre $genre): Response
+    {
+        $genre->update($request->post());
+
+        return (new Success(['genre' => $genre]))->toResponse($request);
     }
 }

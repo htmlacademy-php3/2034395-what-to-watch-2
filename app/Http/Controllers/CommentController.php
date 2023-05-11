@@ -2,59 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Responses\Fail;
+use App\Http\Requests\Comments\AddCommentRequest;
+use App\Http\Requests\Comments\ChangeCommentRequest;
+use App\Http\Requests\Comments\DeleteCommentRequest;
 use App\Http\Responses\Success;
 use App\Models\Comment;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Film;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-use LogicException;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CommentController extends Controller
 {
-    public function get(Request $request): Response
+    public function getAll(Request $request, Film $film): Response
     {
-        return (new Success(['id' => 1]))->toResponse($request);
+        $comments = $film->comments()->get()->all();
+
+        return (new Success(['comments' => $comments, 'total' => count($comments)]))->toResponse($request);
     }
 
-    public function add(Request $request): Response
+    public function add(AddCommentRequest $request, Film $film): Response
     {
-        return (new Success(['id' => 1]))->toResponse($request);
-    }
+        $data = $request->post();
 
-    public function change(Request $request): Response
-    {
-        try {
-            $data = $this->getPostData($request);
-
-            $comment = Comment::query()->find($data['comment_id']);
-
-            if (!$comment) {
-                throw new NotFoundHttpException('Comment not found', null, Response::HTTP_NOT_FOUND);
-            }
-
-            if (Gate::allows('comment.change', $comment)) {
-                $comment->update($data);
-
-                return (new Success(null, Response::HTTP_CREATED))->toResponse();
-            } else {
-                return (new Fail(null, 'Action forbidden', Response::HTTP_FORBIDDEN))->toResponse();
-            }
-        } catch (LogicException|NotFoundHttpException $exception) {
-            return (new Fail(null, $exception->getMessage(), $exception->getCode()))->toResponse();
+        if (Auth::check()) {
+            $data['user_id'] = Auth::user()->id;
         }
+
+        $comment = $film->comments()->create($data);
+
+        return (new Success(['comment' => $comment], Response::HTTP_CREATED))->toResponse($request);
     }
 
-    public function delete(Comment $comment): Response
+    public function change(ChangeCommentRequest $request, Comment $comment): Response
     {
-        if (Gate::allows('comment.delete', $comment)) {
-            $comment->delete();
+        $data = $request->post();
 
-            return (new Success(null, Response::HTTP_CREATED))->toResponse();
-        } else {
-            return (new Fail(null, 'Action forbidden', Response::HTTP_FORBIDDEN))->toResponse();
-        }
+        $comment->update($data);
+
+        return (new Success(['comment' => $comment]))->toResponse($request);
+    }
+
+    public function delete(DeleteCommentRequest $request, Comment $comment): Response
+    {
+        $comment->delete();
+
+        return (new Success(['comment' => $comment], Response::HTTP_CREATED))->toResponse($request);
     }
 }

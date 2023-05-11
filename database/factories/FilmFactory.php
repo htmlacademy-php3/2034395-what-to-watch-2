@@ -28,7 +28,7 @@ class FilmFactory extends Factory
             'director' => fake()->name(),
             'run_time' => fake()->numberBetween(60, 200),
             'released' => fake()->numberBetween(1940, 2023),
-            'imdb_id' => 'tt' . fake()->unique()->uuid(),
+            'imdb_id' => 'tt' . fake()->unique()->numberBetween(10000, 9999999),
             'status' => 'ready',
             'is_promo' => 0,
         ];
