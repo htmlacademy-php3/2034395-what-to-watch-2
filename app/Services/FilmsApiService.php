@@ -3,9 +3,6 @@
 namespace App\Services;
 
 use CurlHandle;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-use Psr\Http\Client\ClientInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class FilmsApiService
