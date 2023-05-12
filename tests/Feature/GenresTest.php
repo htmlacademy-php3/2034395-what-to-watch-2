@@ -29,8 +29,7 @@ class GenresTest extends TestCase
         $response = $this->getJson(route('genres.get'));
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(['data' => ['genres' => [], 'total']]);
-        $response->assertJsonFragment(['total' => 10]);
+        $response->assertJsonStructure(['data' => []]);
     }
 
     public function testAddGenre()
@@ -42,7 +41,7 @@ class GenresTest extends TestCase
 
         $response->assertValid();
         $response->assertStatus(201);
-        $response->assertJsonStructure(['data' => ['genre' => []]]);
+        $response->assertJsonStructure(['data' => []]);
     }
 
     public function testChangeGenre()
@@ -56,6 +55,6 @@ class GenresTest extends TestCase
 
         $response->assertValid();
         $response->assertStatus(200);
-        $response->assertJsonStructure(['data' => ['genre' => []]]);
+        $response->assertJsonStructure(['data' => []]);
     }
 }

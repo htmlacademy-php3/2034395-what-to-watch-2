@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(Role::class);
-            $table->timestamps();
         });
     }
 

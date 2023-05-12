@@ -17,7 +17,7 @@ class SaveFilm implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(private readonly array $data)
+    public function __construct(private readonly Film $film, private readonly array $data)
     {
     }
 
@@ -26,6 +26,14 @@ class SaveFilm implements ShouldQueue
      */
     public function handle(): void
     {
-        Film::query()->create($this->data);
+        $this->film->update($this->data);
+
+        foreach ($this->data['actors'] as $actor) {
+            $this->film->actors()->create(['name' => $actor]);
+        }
+
+        foreach ($this->data['genres'] as $genre) {
+            $this->film->genres()->create(['name' => $genre]);
+        }
     }
 }

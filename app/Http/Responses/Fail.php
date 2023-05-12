@@ -23,7 +23,7 @@ class Fail extends Base
 
     /** @inheritdoc */
     #[ArrayShape(['message' => "null|string", 'errors' => "array"])]
-    protected function makeResponseData(): ?array
+    protected function makeResponseData(): array
     {
         return [
             'message' => $this->message,

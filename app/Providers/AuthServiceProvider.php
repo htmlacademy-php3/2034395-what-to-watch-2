@@ -24,7 +24,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('comment.change', function (User $user, Comment $comment) {
+        Gate::define('comment.action', function (User $user, Comment $comment) {
             if ($user->isModerator() || $comment->user_id === $user->id) {
                 return !$comment->reply()->exists();
             }

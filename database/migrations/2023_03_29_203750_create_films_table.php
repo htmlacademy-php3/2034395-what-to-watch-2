@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('films', function (Blueprint $table) {
             $table->id();
-            $table->text('name');
+            $table->text('name')->nullable();
             $table->text('poster_image')->nullable();
             $table->text('preview_image')->nullable();
             $table->text('background_image')->nullable();
@@ -24,8 +24,8 @@ return new class extends Migration {
             $table->integer('run_time')->nullable();
             $table->integer('released')->nullable();
             $table->string('imdb_id')->unique();
-            $table->text('status');
-            $table->boolean('is_promo');
+            $table->string('status')->default('pending');
+            $table->boolean('is_promo')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

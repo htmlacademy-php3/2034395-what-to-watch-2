@@ -2,13 +2,19 @@
 
 namespace App\Http\Requests\Films;
 
+use App\Models\Film;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class ChangeFilmRequest extends FormRequest
 {
     public function authorize(): bool
     {
+        $film = Film::query()->find($this->route('film'))->first();
+
+        abort_if(!$film->exists(), Response::HTTP_NOT_FOUND, 'Film not found');
+
         return Gate::allows('moderator.action');
     }
 
@@ -16,6 +22,7 @@ class ChangeFilmRequest extends FormRequest
     {
         return [
             'name' => [
+                'required',
                 'string',
                 'max:255',
             ],
@@ -58,11 +65,13 @@ class ChangeFilmRequest extends FormRequest
                 'integer',
             ],
             'imdb_id' => [
+                'required',
                 'string',
                 'unique:films',
                 'regex:/tt[0-9]+/i'
             ],
             'status' => [
+                'required',
                 'string',
                 'in:pending,on moderation,ready'
             ],

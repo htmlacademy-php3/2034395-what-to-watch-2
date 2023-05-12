@@ -15,7 +15,7 @@ class DeleteCommentRequest extends FormRequest
 
         abort_if(!$comment->exists(), Response::HTTP_NOT_FOUND, 'Comment not found');
 
-        return Gate::allows('moderator.action');
+        return Gate::allows('comment.action', $comment);
     }
 
     public function rules(): array

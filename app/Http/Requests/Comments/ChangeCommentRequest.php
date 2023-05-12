@@ -15,7 +15,7 @@ class ChangeCommentRequest extends FormRequest
 
         abort_if(!$comment->exists(), Response::HTTP_NOT_FOUND, 'Comment not found');
 
-        return Gate::allows('comment.change', $comment);
+        return Gate::allows('comment.action', $comment);
     }
 
     public function rules(): array

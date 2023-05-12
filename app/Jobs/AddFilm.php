@@ -31,10 +31,12 @@ class AddFilm implements ShouldQueue
      */
     public function handle(FilmsApiService $apiService): void
     {
+        $film = Film::query()->create(['imdb_id' => $this->imdbId]);
+
         $data = $apiService->getFilm($this->imdbId);
 
-        $filmExists = Film::query()->where('imdb_id', '=', $this->imdbId)->exists();
-
-        SaveFilm::dispatchIf(!$filmExists, $data);
+        if ($data) {
+            SaveFilm::dispatch($film, $data);
+        }
     }
 }
