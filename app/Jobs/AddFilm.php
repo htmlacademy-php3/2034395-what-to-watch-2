@@ -18,11 +18,12 @@ class AddFilm implements ShouldQueue
     /**
      * Create a new job instance.
      *
+     * @param Film $film
      * @param string $imdbId
      *
      * @return void
      */
-    public function __construct(private readonly string $imdbId)
+    public function __construct(private readonly Film $film, private readonly string $imdbId)
     {
     }
 
@@ -31,20 +32,18 @@ class AddFilm implements ShouldQueue
      */
     public function handle(FilmsApiService $apiService): void
     {
-        $film = Film::query()->create(['imdb_id' => $this->imdbId]);
-
         $data = $apiService->getFilm($this->imdbId);
 
         abort_if(!$data, Response::HTTP_UNPROCESSABLE_ENTITY, 'Request failed');
 
-        $film->update($data);
+        $this->film->update($data);
 
         foreach ($data['actors'] as $actor) {
-            $film->actors()->create(['name' => $actor]);
+            $this->film->actors()->create(['name' => $actor]);
         }
 
         foreach ($data['genres'] as $genre) {
-            $film->genres()->create(['name' => $genre]);
+            $this->film->genres()->create(['name' => $genre]);
         }
     }
 }

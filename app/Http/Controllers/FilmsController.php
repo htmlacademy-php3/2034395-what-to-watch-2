@@ -15,7 +15,9 @@ class FilmsController extends Controller
 {
     public function add(AddFilmRequest $request): Response
     {
-        AddFilm::dispatch($request->post('imdb_id'));
+        $film = Film::query()->create($request->post());
+
+        AddFilm::dispatch($film, $request->post('imdb_id'));
 
         return (new Success(['status' => 'ok'], Response::HTTP_CREATED))->toResponse($request);
     }
