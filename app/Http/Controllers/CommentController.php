@@ -18,7 +18,7 @@ class CommentController extends Controller
     {
         $comments = $film->comments()->get()->all();
 
-        return (new Success(['comments' => $comments, 'total' => count($comments)]))->toResponse($request);
+        return (new Success($comments))->toResponse($request);
     }
 
     public function add(AddCommentRequest $request, Film $film): Response
@@ -31,7 +31,7 @@ class CommentController extends Controller
 
         $comment = $film->comments()->create($data);
 
-        return (new Success(['comment' => $comment], Response::HTTP_CREATED))->toResponse($request);
+        return (new Success($comment,Response::HTTP_CREATED))->toResponse($request);
     }
 
     public function change(ChangeCommentRequest $request, Comment $comment): Response
@@ -40,13 +40,13 @@ class CommentController extends Controller
 
         $comment->update($data);
 
-        return (new Success(['comment' => $comment]))->toResponse($request);
+        return (new Success($comment))->toResponse($request);
     }
 
     public function delete(DeleteCommentRequest $request, Comment $comment): Response
     {
         $comment->delete();
 
-        return (new Success(['comment' => $comment], Response::HTTP_CREATED))->toResponse($request);
+        return (new Success($comment,Response::HTTP_CREATED))->toResponse($request);
     }
 }

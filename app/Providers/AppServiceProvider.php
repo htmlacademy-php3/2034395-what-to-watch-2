@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Jobs\AddFilm;
+use App\Services\FilmsApiService;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,5 +23,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Relation::morphMap(config('app.morph_aliases'));
+
+        $this->app->bindMethod([AddFilm::class, 'handle'], function ($job, $app) {
+            return $job->handle($app->make(FilmsApiService::class));
+        });
     }
 }

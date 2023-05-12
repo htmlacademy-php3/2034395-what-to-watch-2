@@ -15,20 +15,20 @@ class GenreController extends Controller
     {
         $genres = Genre::query()->get()->all();
 
-        return (new Success(['genres' => $genres, 'total' => count($genres)]))->toResponse($request);
+        return (new Success($genres))->toResponse($request);
     }
 
     public function add(AddGenreRequest $request): Response
     {
         $genre = Genre::query()->create($request->post());
 
-        return (new Success(['genre' => $genre], Response::HTTP_CREATED))->toResponse($request);
+        return (new Success($genre, Response::HTTP_CREATED))->toResponse($request);
     }
 
     public function change(ChangeGenreRequest $request, Genre $genre): Response
     {
         $genre->update($request->post());
 
-        return (new Success(['genre' => $genre]))->toResponse($request);
+        return (new Success($genre))->toResponse($request);
     }
 }

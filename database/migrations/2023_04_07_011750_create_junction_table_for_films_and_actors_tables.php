@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(Film::class);
             $table->foreignIdFor(Actor::class);
-            $table->timestamps();
         });
     }
 

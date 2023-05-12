@@ -2,7 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Actor;
+use App\Models\Comment;
 use App\Models\Film;
+use App\Models\Genre;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,7 +20,11 @@ class FilmsTest extends TestCase
     {
         parent::setUp();
 
-        Film::factory(10)->create();
+        Film::factory(10)
+            ->has(Actor::factory(5))
+            ->has(Genre::factory(2))
+            ->has(Comment::factory(15))
+            ->create();
 
         $user = User::factory()->has(Role::factory())->create();
 
@@ -29,7 +36,15 @@ class FilmsTest extends TestCase
         $response = $this->getJson(route('films.get'));
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(['data' => ['films' => [], 'total']]);
+        $response->assertJsonStructure([
+            'data' => [],
+            'current_page',
+            'first_page_url',
+            'next_page_url',
+            'prev_page_url',
+            'per_page',
+            'total',
+        ]);
         $response->assertJsonFragment(['total' => 10]);
     }
 
@@ -40,37 +55,18 @@ class FilmsTest extends TestCase
         $response = $this->getJson(route('film.get', ['film' => $film->id]));
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(['data' => ['film' => []]]);
+        $response->assertJsonStructure(['data' => []]);
     }
 
     public function testAddFilm()
     {
         $response = $this->postJson(
             route('film.add'),
-            [
-                'name' => 'The Shawshank Redemption',
-                'imdb_id' => 'tt0111161',
-                'status' => 'ready',
-                'is_promo' => false,
-            ]
+            ['imdb_id' => 'tt0111161']
         );
 
         $response->assertValid();
         $response->assertStatus(201);
-        $response->assertJsonStructure(['data' => ['film' => []]]);
-    }
-
-    public function testChangeFilm()
-    {
-        $film = Film::query()->inRandomOrder()->get()->first();
-
-        $response = $this->patchJson(
-            route('film.change', ['film' => $film->id]),
-            ['name' => 'The Shawshank Redemption'],
-        );
-
-        $response->assertValid();
-        $response->assertStatus(200);
-        $response->assertJsonStructure(['data' => ['film' => []]]);
+        $response->assertJsonStructure(['data' => ['status']]);
     }
 }

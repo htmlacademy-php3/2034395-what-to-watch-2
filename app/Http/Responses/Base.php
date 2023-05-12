@@ -15,7 +15,7 @@ abstract class Base implements Responsable
     }
 
     /** @inheritDoc */
-    public function toResponse($request = null): Response
+    public function toResponse($request): Response
     {
         return response()->json($this->makeResponseData(), $this->statusCode);
     }
@@ -37,7 +37,7 @@ abstract class Base implements Responsable
     /**
      * Create response body
      *
-     * @return array|null
+     * @return array
      */
-    abstract protected function makeResponseData(): ?array;
+    abstract protected function makeResponseData(): array;
 }
