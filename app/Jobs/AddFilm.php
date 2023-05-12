@@ -5,11 +5,11 @@ namespace App\Jobs;
 use App\Models\Film;
 use App\Services\FilmsApiService;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Symfony\Component\HttpFoundation\Response;
 
 class AddFilm implements ShouldQueue
 {
@@ -35,8 +35,16 @@ class AddFilm implements ShouldQueue
 
         $data = $apiService->getFilm($this->imdbId);
 
-        if ($data) {
-            SaveFilm::dispatch($film, $data);
+        abort_if(!$data, Response::HTTP_UNPROCESSABLE_ENTITY, 'Request failed');
+
+        $film->update($data);
+
+        foreach ($data['actors'] as $actor) {
+            $film->actors()->create(['name' => $actor]);
+        }
+
+        foreach ($data['genres'] as $genre) {
+            $film->genres()->create(['name' => $genre]);
         }
     }
 }
