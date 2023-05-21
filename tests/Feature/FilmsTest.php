@@ -2,12 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\AddFilm;
 use App\Models\Actor;
 use App\Models\Comment;
 use App\Models\Film;
 use App\Models\Genre;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\FilmsApiService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
@@ -67,6 +69,6 @@ class FilmsTest extends TestCase
 
         $response->assertValid();
         $response->assertStatus(201);
-        $response->assertJsonStructure(['data' => ['status']]);
+        $response->assertJsonStructure(['data' => []]);
     }
 }

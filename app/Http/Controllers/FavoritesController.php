@@ -6,7 +6,7 @@ use App\Http\Responses\Success;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class FavoriteController extends Controller
+class FavoritesController extends Controller
 {
     public function get(Request $request): Response
     {

@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class CommentController extends Controller
+class CommentsController extends Controller
 {
     public function getAll(Request $request, Film $film): Response
     {

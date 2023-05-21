@@ -213,8 +213,4 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
-    'morph_aliases' => [
-        'film' => Film::class,
-    ]
-
 ];

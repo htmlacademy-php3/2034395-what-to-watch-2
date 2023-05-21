@@ -9,7 +9,7 @@ use App\Models\Genre;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class GenreController extends Controller
+class GenresController extends Controller
 {
     public function getAll(Request $request): Response
     {

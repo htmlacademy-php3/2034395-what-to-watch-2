@@ -8,7 +8,6 @@ use App\Http\Responses\Success;
 use App\Jobs\AddFilm;
 use App\Models\Film;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class FilmsController extends Controller
@@ -17,9 +16,9 @@ class FilmsController extends Controller
     {
         $film = Film::query()->create($request->post());
 
-        AddFilm::dispatch($film, $request->post('imdb_id'));
+        AddFilm::dispatch($film);
 
-        return (new Success(['status' => 'ok'], Response::HTTP_CREATED))->toResponse($request);
+        return (new Success($film, Response::HTTP_CREATED))->toResponse($request);
     }
 
     public function change(ChangeFilmRequest $request, Film $film): Response

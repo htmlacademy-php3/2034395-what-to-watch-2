@@ -15,7 +15,7 @@ class FilmTest extends TestCase
     /**
      * A basic unit test example.
      */
-    public function test_film(): void
+    public function testFilm(): void
     {
         $film = Film::factory()
             ->has(
