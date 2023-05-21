@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Models\Film;
-use App\Services\FilmsApiService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -19,24 +18,23 @@ class AddFilm implements ShouldQueue
      * Create a new job instance.
      *
      * @param Film $film
-     * @param string $imdbId
      *
      * @return void
      */
-    public function __construct(private readonly Film $film, private readonly string $imdbId)
+    public function __construct(private readonly Film $film)
     {
     }
 
     /**
      * Execute the job.
      */
-    public function handle(FilmsApiService $apiService): void
+    public function handle($apiService): void
     {
-        $data = $apiService->getFilm($this->imdbId);
+        $data = $apiService->getFilm($this->film->imdb_id);
 
         abort_if(!$data, Response::HTTP_UNPROCESSABLE_ENTITY, 'Request failed');
 
-        $this->film->update($data);
+        $this->film->update($data['film']);
 
         foreach ($data['actors'] as $actor) {
             $this->film->actors()->create(['name' => $actor]);

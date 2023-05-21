@@ -6,6 +6,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserRequest;
 use App\Http\Responses\Success;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,7 +20,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return (new Success(['user' => $user]))->toResponse($request);
+        return (new Success($user, Response::HTTP_CREATED))->toResponse($request);
     }
 
     public function login(LoginRequest $request): Response
@@ -29,9 +30,11 @@ class AuthController extends Controller
         return (new Success(['status' => 'ok']))->toResponse($request);
     }
 
-    public function logout(): void
+    public function logout(Request $request): Response
     {
         Auth::user()->tokens()->delete();
         Auth::logout();
+
+        return (new Success(['status' => 'ok']))->toResponse($request);
     }
 }

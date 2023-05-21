@@ -15,7 +15,7 @@ class CommentTest extends TestCase
     /**
      * A basic unit test example.
      */
-    public function test_comment(): void
+    public function testComment(): void
     {
         $comment = Comment::factory()
             ->for(Film::factory())

@@ -6,7 +6,7 @@ use App\Http\Responses\Success;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class UserController extends Controller
+class UsersController extends Controller
 {
     public function get(Request $request): Response
     {
