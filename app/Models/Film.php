@@ -105,18 +105,6 @@ class Film extends Model
      */
     public function rating(): float
     {
-        $comments = $this->comments()->where('rating', '>', 0)->get()->all();
-
-        $gradesSum = array_reduce($comments, function ($carry, $item) {
-            $carry += $item->rating;
-
-            return $carry;
-        }, 0);
-
-        if ($gradesSum > 0) {
-            return $gradesSum / count($comments);
-        }
-
-        return 0;
+        return $this->comments()->sum('rating') / $this->comments()->count();
     }
 }
