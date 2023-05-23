@@ -71,4 +71,14 @@ class FilmsTest extends TestCase
         $response->assertStatus(201);
         $response->assertJsonStructure(['data' => []]);
     }
+
+    public function testSimilarFilms()
+    {
+        $film = Film::query()->inRandomOrder()->get()->first();
+
+        $response = $this->getJson(route('film.similar.get', ['film' => $film->id]));
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure(['data' => []]);
+    }
 }

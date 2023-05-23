@@ -65,8 +65,12 @@ class FilmsController extends Controller
         return (new Success($filmWithRelations))->toResponse($request);
     }
 
-    public function similar(Request $request): Response
+    public function similar(Request $request, Film $film): Response
     {
-        return (new Success(['id' => 1, 'name' => 'film name']))->toResponse($request);
+        $genre = $film->genres()->inRandomOrder()->get()->first();
+
+        $similar = $genre->films()->where('films.id', '!=', $film->id)->limit(4)->get()->all();
+
+        return (new Success($similar))->toResponse($request);
     }
 }
