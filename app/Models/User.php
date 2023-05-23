@@ -63,21 +63,11 @@ class User extends Authenticatable
     /**
      * Get user favorites films
      *
-     * @return HasMany
+     * @return BelongsToMany
      */
-    public function favorites(): HasMany
+    public function favorites(): BelongsToMany
     {
-        return $this->hasMany(Favorite::class);
-    }
-
-    /**
-     * Get user comments
-     *
-     * @return MorphMany
-     */
-    public function comments(): MorphMany
-    {
-        return $this->morphMany(Comment::class, 'commentable');
+        return $this->belongsToMany(Film::class, 'favorites');
     }
 
     /**

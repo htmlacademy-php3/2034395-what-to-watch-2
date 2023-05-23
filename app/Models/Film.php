@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -98,34 +99,12 @@ class Film extends Model
     }
 
     /**
-     * Get favorites
-     *
-     * @return HasMany
-     */
-    public function favorites(): HasMany
-    {
-        return $this->hasMany(Favorite::class);
-    }
-
-    /**
      * Get rating
      *
      * @return float
      */
     public function rating(): float
     {
-        $comments = $this->comments()->where('rating', '>', 0)->get()->all();
-
-        $gradesSum = array_reduce($comments, function ($carry, $item) {
-            $carry += $item->rating;
-
-            return $carry;
-        }, 0);
-
-        if ($gradesSum > 0) {
-            return $gradesSum / count($comments);
-        }
-
-        return 0;
+        return $this->comments()->sum('rating') / $this->comments()->count();
     }
 }
