@@ -13,15 +13,15 @@ class GenresTest extends TestCase
 {
     use RefreshDatabase;
 
+    private User $user;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         Genre::factory(10)->create();
 
-        $user = User::factory()->has(Role::factory())->create();
-
-        Auth::login($user);
+        $this->user = User::factory()->has(Role::factory())->create();
     }
 
     public function testGetGenresList()
@@ -34,7 +34,7 @@ class GenresTest extends TestCase
 
     public function testAddGenre()
     {
-        $response = $this->postJson(
+        $response = $this->actingAs($this->user)->postJson(
             route('genre.add'),
             ['name' => 'Триллер'],
         );
@@ -48,7 +48,7 @@ class GenresTest extends TestCase
     {
         $genre = Genre::query()->inRandomOrder()->get()->first();
 
-        $response = $this->patchJson(
+        $response = $this->actingAs($this->user)->patchJson(
             route('genre.change', ['genre' => $genre->id]),
             ['name' => 'Комедия'],
         );

@@ -20,14 +20,14 @@ class GenresController extends Controller
 
     public function add(AddGenreRequest $request): Response
     {
-        $genre = Genre::query()->create($request->post());
+        $genre = Genre::query()->create($request->validated());
 
         return (new Success($genre, Response::HTTP_CREATED))->toResponse($request);
     }
 
     public function change(ChangeGenreRequest $request, Genre $genre): Response
     {
-        $genre->update($request->post());
+        $genre->update($request->validated());
 
         return (new Success($genre))->toResponse($request);
     }

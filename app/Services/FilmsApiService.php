@@ -2,19 +2,15 @@
 
 namespace App\Services;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\GuzzleException;
+use HttpRequestException;
+use Illuminate\Support\Facades\Http;
 
 class FilmsApiService
 {
-    private ClientInterface $client;
-
     private string $baseUrl = 'http://guide.phpdemo.ru/api';
 
     public function __construct()
     {
-        $this->client = new Client();
     }
 
     /**
@@ -25,8 +21,14 @@ class FilmsApiService
     public function getFilm(string $imdbId): array
     {
         try {
+            $response = Http::get("$this->baseUrl/films/$imdbId");
+
+            if (!$response->successful()) {
+                throw new HttpRequestException("Request failed");
+            }
+
             $film = json_decode(
-                $this->client->get("$this->baseUrl/films/$imdbId")->getBody()->getContents(),
+                $response->body(),
                 true
             );
 
@@ -47,7 +49,7 @@ class FilmsApiService
                 'actors' => $film['actors'],
                 'genres' => $film['genres'],
             ];
-        } catch (GuzzleException $exception) {
+        } catch (HttpRequestException $exception) {
             abort($exception->getCode(), $exception->getMessage());
         }
     }

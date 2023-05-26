@@ -14,6 +14,8 @@ class CommentsTest extends TestCase
 {
     use RefreshDatabase;
 
+    private User $user;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -23,9 +25,7 @@ class CommentsTest extends TestCase
             ->has(Comment::factory(5))
             ->create();
 
-        $user = User::factory()->has(Role::factory())->create();
-
-        Auth::login($user);
+        $this->user = User::factory()->has(Role::factory())->create();
     }
 
     public function testGetCommentsList()
@@ -42,7 +42,7 @@ class CommentsTest extends TestCase
     {
         $film = Film::query()->get()->first();
 
-        $response = $this->postJson(
+        $response = $this->actingAs($this->user)->postJson(
             route('comment.add', ['film' => $film->id]),
             [
                 'text' => 'Test comment',
@@ -60,7 +60,7 @@ class CommentsTest extends TestCase
     {
         $comment = Comment::query()->inRandomOrder()->get()->first();
 
-        $response = $this->patchJson(
+        $response = $this->actingAs($this->user)->patchJson(
             route('comment.change', ['comment' => $comment->id]),
             ['text' => 'Changed test comment text'],
             ['Accept' => 'application/json'],
@@ -76,7 +76,7 @@ class CommentsTest extends TestCase
     {
         $comment = Comment::query()->inRandomOrder()->get()->first();
 
-        $response = $this->deleteJson(route('comment.delete', ['comment' => $comment->id]));
+        $response = $this->actingAs($this->user)->deleteJson(route('comment.delete', ['comment' => $comment->id]));
 
         $response->assertStatus(201);
         $response->assertJsonStructure(['data' => []]);

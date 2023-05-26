@@ -25,7 +25,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::define('comment.action', function (User $user, Comment $comment) {
-            if ($user->isModerator() || $comment->user_id === $user->id) {
+            if (User::moderators()->find($user)->first()->exists() || $comment->user_id === $user->id) {
                 return !$comment->reply()->exists();
             }
 
@@ -33,7 +33,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('moderator.action', function (User $user) {
-            return $user->isModerator();
+            return User::moderators()->find($user)->first()->exists();
         });
     }
 }

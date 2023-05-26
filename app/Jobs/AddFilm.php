@@ -2,7 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Models\Actor;
 use App\Models\Film;
+use App\Models\Genre;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -37,11 +39,23 @@ class AddFilm implements ShouldQueue
         $this->film->update($data['film']);
 
         foreach ($data['actors'] as $actor) {
-            $this->film->actors()->create(['name' => $actor]);
+            $_actor = Actor::query()->where('name', '=', $actor)->get()->first();
+
+            if ($_actor) {
+                $this->film->actors()->attach($_actor->id);
+            } else {
+                $this->film->actors()->create(['name' => $actor]);
+            }
         }
 
         foreach ($data['genres'] as $genre) {
-            $this->film->genres()->create(['name' => $genre]);
+            $_genre = Genre::query()->where('name', '=', $genre)->get()->first();
+
+            if ($_genre) {
+                $this->film->genres()->attach($_genre->id);
+            } else {
+                $this->film->genres()->create(['name' => $genre]);
+            }
         }
     }
 }

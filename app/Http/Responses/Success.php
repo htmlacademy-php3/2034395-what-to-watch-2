@@ -12,11 +12,12 @@ class Success extends Base
     /**
      * @param mixed $data
      * @param int $code
+     * @param mixed $headers
      */
     #[Pure]
-    public function __construct(mixed $data, int $code = Response::HTTP_OK)
+    public function __construct(mixed $data, int $code = Response::HTTP_OK, mixed $headers = [])
     {
-        parent::__construct($data, $code);
+        parent::__construct($data, $code, $headers);
     }
 
     /**
@@ -29,7 +30,7 @@ class Success extends Base
      */
     public function toResponseWithPagination($request, LengthAwarePaginator $paginator): Response
     {
-        return response()->json($this->makeResponseDataWithPagination($paginator), $this->statusCode);
+        return response()->json($this->makeResponseDataWithPagination($paginator), $this->statusCode, $this->headers);
     }
 
     /**

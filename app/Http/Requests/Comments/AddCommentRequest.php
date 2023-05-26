@@ -10,10 +10,6 @@ class AddCommentRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $film = Film::query()->find($this->route('film'))->first();
-
-        abort_if(!$film->exists(), Response::HTTP_NOT_FOUND, 'Film not found');
-
         return true;
     }
 

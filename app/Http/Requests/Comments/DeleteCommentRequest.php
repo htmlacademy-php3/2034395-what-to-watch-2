@@ -13,8 +13,6 @@ class DeleteCommentRequest extends FormRequest
     {
         $comment = Comment::query()->find($this->route('comment'))->first();
 
-        abort_if(!$comment->exists(), Response::HTTP_NOT_FOUND, 'Comment not found');
-
         return Gate::allows('comment.action', $comment);
     }
 

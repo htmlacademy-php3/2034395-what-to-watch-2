@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use App\Http\Filters\QueryFilter;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\JoinClause;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Film Eloquent Model
@@ -106,5 +106,10 @@ class Film extends Model
     public function rating(): float
     {
         return $this->comments()->sum('rating') / $this->comments()->count();
+    }
+
+    public function scopeFilter(Builder $builder, QueryFilter $filter): void
+    {
+        $filter->apply($builder);
     }
 }

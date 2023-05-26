@@ -13,8 +13,6 @@ class ChangeFilmRequest extends FormRequest
     {
         $film = Film::query()->find($this->route('film'))->first();
 
-        abort_if(!$film->exists(), Response::HTTP_NOT_FOUND, 'Film not found');
-
         return Gate::allows('moderator.action');
     }
 

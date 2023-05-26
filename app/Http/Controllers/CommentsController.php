@@ -23,20 +23,16 @@ class CommentsController extends Controller
 
     public function add(AddCommentRequest $request, Film $film): Response
     {
-        $data = $request->post();
+        $comment = $film->comments()->create($request->validated());
 
-        if (Auth::check()) {
-            $data['user_id'] = Auth::user()->id;
-        }
+        $comment->user()->associate($request->user());
 
-        $comment = $film->comments()->create($data);
-
-        return (new Success($comment,Response::HTTP_CREATED))->toResponse($request);
+        return (new Success($comment, Response::HTTP_CREATED))->toResponse($request);
     }
 
     public function change(ChangeCommentRequest $request, Comment $comment): Response
     {
-        $data = $request->post();
+        $data = $request->validated();
 
         $comment->update($data);
 
@@ -47,6 +43,6 @@ class CommentsController extends Controller
     {
         $comment->delete();
 
-        return (new Success($comment,Response::HTTP_CREATED))->toResponse($request);
+        return (new Success($comment, Response::HTTP_CREATED))->toResponse($request);
     }
 }

@@ -12,8 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Comment Eloquent Model
  *
  * @property integer $id
- * @property string $comment_type
- * @property integer $comment_id
+ * @property integer $film_id
  * @property string $text
  * @property integer $rating
  * @property integer $user_id
@@ -31,10 +30,12 @@ class Comment extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'comment_type',
-        'comment_id',
         'text',
         'rating',
+    ];
+
+    protected $guarded = [
+        'film_id',
         'user_id',
         'reply_id',
     ];

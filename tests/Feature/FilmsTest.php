@@ -27,10 +27,6 @@ class FilmsTest extends TestCase
             ->has(Genre::factory(2))
             ->has(Comment::factory(15))
             ->create();
-
-        $user = User::factory()->has(Role::factory())->create();
-
-        Auth::login($user);
     }
 
     public function testGetFilmsList()

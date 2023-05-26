@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\Films;
 
-use App\Models\Film;
 use Illuminate\Foundation\Http\FormRequest;
-use Symfony\Component\HttpFoundation\Response;
 
 class AddFilmRequest extends FormRequest
 {

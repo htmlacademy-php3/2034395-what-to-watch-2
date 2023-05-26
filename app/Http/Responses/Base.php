@@ -10,14 +10,15 @@ abstract class Base implements Responsable
 {
     public function __construct(
         protected mixed $data = [],
-        public int $statusCode = Response::HTTP_OK
+        public int $statusCode = Response::HTTP_OK,
+        protected array $headers = [],
     ) {
     }
 
     /** @inheritDoc */
     public function toResponse($request): Response
     {
-        return response()->json($this->makeResponseData(), $this->statusCode);
+        return response()->json($this->makeResponseData(), $this->statusCode, $this->headers);
     }
 
     /**
